@@ -137,7 +137,7 @@
     }
 
     /* ─── CONTENT ─── */
-    .boreau-content {
+    .borrow-content {
       position: relative;
       z-index: 1;
       max-width: 700px;
@@ -146,12 +146,12 @@
     }
 
     /* ─── HEADER ─── */
-    .boreau-header {
+    .borrow-header {
       text-align: center;
       margin-bottom: 5rem;
     }
 
-    .boreau-eyebrow {
+    .borrow-eyebrow {
       font-family: var(--mono);
       font-size: 0.58rem;
       letter-spacing: 0.22em;
@@ -159,7 +159,7 @@
       margin-bottom: 2rem;
     }
 
-    .boreau-name {
+    .borrow-name {
       font-family: var(--serif-ja);
       font-size: clamp(2rem, 6vw, 3.5rem);
       font-weight: 500;
@@ -169,7 +169,7 @@
       line-height: 1.2;
     }
 
-    .boreau-name-en {
+    .borrow-name-en {
       font-family: var(--serif-en);
       font-style: italic;
       font-size: 1rem;
@@ -177,14 +177,14 @@
       letter-spacing: 0.1em;
     }
 
-    .boreau-divider {
+    .borrow-divider {
       margin: 2.5rem auto;
       width: 3rem;
       height: 0.5px;
       background: var(--border-warm);
     }
 
-    .boreau-tagline {
+    .borrow-tagline {
       font-size: 0.88rem;
       color: var(--paper-dim);
       line-height: 2.2;
@@ -379,7 +379,7 @@
     }
 
     /* ─── FOOTER ─── */
-    .boreau-footer {
+    .borrow-footer {
       text-align: center;
       padding-top: 2rem;
       border-top: 0.5px solid var(--border);
@@ -414,7 +414,7 @@
     }
 
     /* ─── CUSTOM CURSOR ─── */
-    #boreau-cursor {
+    #borrow-cursor {
       position: fixed;
       width: 6px;
       height: 6px;
@@ -428,14 +428,14 @@
       mix-blend-mode: screen;
     }
 
-    #boreau-cursor.expanded {
+    #borrow-cursor.expanded {
       width: 24px;
       height: 24px;
       opacity: 0.15;
     }
 
     @media (max-width: 480px) {
-      .boreau-content { padding: 5rem 1.25rem 6rem; }
+      .borrow-content { padding: 5rem 1.25rem 6rem; }
       .menu-item { grid-template-columns: 1fr; }
       .menu-item-price { display: none; }
     }
@@ -446,7 +446,7 @@
   <!-- ─── ARRIVAL OVERLAY ─── -->
   <div id="arrival">
     <div class="arrival-title" id="arrival-title">虚構喫茶ボロウ</div>
-    <div class="arrival-sub" id="arrival-sub">Café Boreau — a place that exists only when imagined</div>
+    <div class="arrival-sub" id="arrival-sub">Café Borrow — a place that exists only when imagined</div>
     <button class="arrival-enter" id="arrival-enter">入店する</button>
   </div>
 
@@ -454,17 +454,17 @@
   <div class="ambient"></div>
 
   <!-- ─── CUSTOM CURSOR ─── -->
-  <div id="boreau-cursor"></div>
+  <div id="borrow-cursor"></div>
 
   <!-- ─── MAIN ─── -->
-  <main class="boreau-content" id="main-content" style="opacity:0">
+  <main class="borrow-content" id="main-content" style="opacity:0">
 
-    <header class="boreau-header fade-in" style="animation-delay:0.2s">
-      <div class="boreau-eyebrow">WAFT 指定拠点 / 第10条</div>
-      <h1 class="boreau-name candle">虚構喫茶<br>ボロウ</h1>
-      <div class="boreau-name-en">Café Boreau</div>
-      <div class="boreau-divider"></div>
-      <p class="boreau-tagline">
+    <header class="borrow-header fade-in" style="animation-delay:0.2s">
+      <div class="borrow-eyebrow">WAFT 指定拠点 / 第10条</div>
+      <h1 class="borrow-name candle">虚構喫茶<br>ボロウ</h1>
+      <div class="borrow-name-en">Café Borrow</div>
+      <div class="borrow-divider"></div>
+      <p class="borrow-tagline">
         普遍的な喫茶店のイメージ集積により構築されており、<br>
         あなたが空想することによってのみ<br>
         その存在が励起される。
@@ -559,7 +559,7 @@
       <a href="https://[WAFTのURL]" target="_blank" rel="noopener">← WAFTへ戻る / Return to WAFT</a>
     </div>
 
-    <footer class="boreau-footer fade-in" style="animation-delay:1.1s">
+    <footer class="borrow-footer fade-in" style="animation-delay:1.1s">
       虚構喫茶ボロウ<br>
       WAFT 指定拠点 第10条<br>
       <span style="opacity:0.5">観測の終了とともに、この場所はあなたの中にのみ残る</span>
@@ -569,7 +569,7 @@
 
   <script>
     // ─── カスタムカーソル ───
-    const cursor = document.getElementById('boreau-cursor');
+    const cursor = document.getElementById('borrow-cursor');
     let mx = -100, my = -100, cx = -100, cy = -100;
 
     document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
