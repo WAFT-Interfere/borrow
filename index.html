@@ -3,674 +3,688 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>虚構喫茶ボロウ</title>
-  <meta name="description" content="観測者が空想することによってのみその存在が励起される境界観測基地。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <title>WAFT — 対境界線広域干渉及び超領域的表現開発機構</title>
+  <meta name="description" content="対境界線広域干渉及び超領域的表現開発機構。現実と虚構の境界線における干渉と揺動。" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    :root {
-      --bg: #1a1714;
-      --bg2: #211e1a;
-      --bg3: #2a2520;
-      --paper: #f0ead8;
-      --paper-dim: #c8bfa8;
-      --paper-faint: #8a7f6a;
-      --amber: #c8923a;
-      --amber-dim: rgba(200,146,58,0.15);
-      --border: rgba(240,234,216,0.1);
-      --border-warm: rgba(200,146,58,0.25);
-      --aoya: #4444ff;
-      --misjo: #cc2200;
-      --mono: 'Share Tech Mono', monospace;
-      --serif-en: 'IM Fell English', serif;
-      --serif-ja: 'Shippori Mincho', serif;
-      --trans: 0.4s cubic-bezier(0.4,0,0.2,1);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--paper);
-      font-family: var(--serif-ja);
-      font-weight: 400;
-      line-height: 1.85;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ─── GRAIN ─── */
-    body::before {
-      content: '';
+    /* ─── ACCESS OVERLAY ─── */
+    #access-overlay {
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.8;
-    }
-
-    /* ─── ARRIVAL OVERLAY ─── */
-    #arrival {
-      position: fixed;
-      inset: 0;
-      background: #0d0b09;
+      background: #0a0a0a;
       z-index: 10000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 1.2s ease;
+      transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1);
     }
 
-    #arrival.out {
+    #access-overlay.out {
       opacity: 0;
       pointer-events: none;
     }
 
-    .arrival-title {
-      font-family: var(--serif-ja);
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      color: var(--paper-dim);
-      letter-spacing: 0.3em;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 1s ease, transform 1s ease;
-      margin-bottom: 0.5rem;
-    }
-
-    .arrival-sub {
-      font-family: var(--serif-en);
-      font-style: italic;
-      font-size: 0.85rem;
-      color: var(--paper-faint);
-      letter-spacing: 0.12em;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 1s ease 0.4s;
-    }
-
-    .arrival-title.show { opacity: 1; transform: translateY(0); }
-    .arrival-sub.show { opacity: 1; }
-
-    .arrival-enter {
-      margin-top: 3rem;
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--paper-faint);
-      letter-spacing: 0.2em;
-      opacity: 0;
-      cursor: pointer;
-      border: 0.5px solid rgba(240,234,216,0.15);
-      padding: 0.6rem 1.8rem;
-      background: transparent;
-      transition: opacity 1s ease 1.2s, border-color var(--trans), color var(--trans);
-    }
-
-    .arrival-enter.show { opacity: 1; }
-    .arrival-enter:hover {
-      border-color: rgba(240,234,216,0.4);
-      color: var(--paper);
-    }
-
-    /* ─── AMBIENT LIGHT ─── */
-    .ambient {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(200,146,58,0.04) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-      top: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: ambientDrift 12s ease-in-out infinite alternate;
-    }
-
-    @keyframes ambientDrift {
-      from { transform: translateX(-50%) translateY(0); }
-      to   { transform: translateX(-50%) translateY(40px); }
-    }
-
-    /* ─── CONTENT ─── */
-    .boreau-content {
-      position: relative;
-      z-index: 1;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 6rem 2rem 8rem;
-    }
-
-    /* ─── HEADER ─── */
-    .boreau-header {
-      text-align: center;
-      margin-bottom: 5rem;
-    }
-
-    .boreau-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.22em;
-      color: var(--paper-faint);
-      margin-bottom: 2rem;
-    }
-
-    .boreau-name {
-      font-family: var(--serif-ja);
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      color: var(--paper);
-      margin-bottom: 0.5rem;
-      line-height: 1.2;
-    }
-
-    .boreau-name-en {
-      font-family: var(--serif-en);
-      font-style: italic;
-      font-size: 1rem;
-      color: var(--paper-faint);
+    .access-log {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: #e8e8e0;
       letter-spacing: 0.1em;
-    }
-
-    .boreau-divider {
-      margin: 2.5rem auto;
-      width: 3rem;
-      height: 0.5px;
-      background: var(--border-warm);
-    }
-
-    .boreau-tagline {
-      font-size: 0.88rem;
-      color: var(--paper-dim);
       line-height: 2.2;
-      max-width: 420px;
-      margin: 0 auto;
-      letter-spacing: 0.05em;
+      width: min(480px, 90vw);
+      opacity: 0;
+      transition: opacity 0.4s;
     }
 
-    /* ─── PRESENCE METER ─── */
-    .presence-section {
-      border: 0.5px solid var(--border-warm);
-      padding: 2rem;
-      margin-bottom: 4rem;
-      position: relative;
+    .access-log.visible { opacity: 1; }
+
+    .access-log-line {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s, transform 0.3s;
     }
 
-    .presence-section::before {
-      content: '第10条 / 境界観測基地';
-      position: absolute;
-      top: -0.6rem;
-      left: 1.5rem;
-      background: var(--bg);
-      padding: 0 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      color: var(--paper-faint);
-      letter-spacing: 0.1em;
+    .access-log-line.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .presence-label {
-      font-family: var(--mono);
+    .log-prefix { color: #555; flex-shrink: 0; }
+    .log-blue { color: #0000FF; }
+    .log-red { color: #FF0000; }
+    .log-dim { color: #444; }
+
+    .access-bar-wrap {
+      width: min(480px, 90vw);
+      margin-top: 2rem;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .access-bar-wrap.visible { opacity: 1; }
+
+    .access-bar-label {
+      font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem;
-      color: var(--paper-faint);
+      color: #444;
       letter-spacing: 0.14em;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
     }
 
-    .presence-bar-track {
-      height: 2px;
-      background: rgba(240,234,216,0.08);
-      margin-bottom: 1.5rem;
+    .access-bar-track {
+      height: 1px;
+      background: #222;
       position: relative;
       overflow: hidden;
     }
 
-    .presence-bar-fill {
+    .access-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+      background: #e8e8e0;
       width: 0%;
-      transition: width 3s cubic-bezier(0.4,0,0.2,1);
+      transition: width 0.1s linear;
     }
 
-    .presence-desc {
-      font-size: 0.78rem;
-      color: var(--paper-faint);
-      line-height: 1.9;
-      font-style: italic;
-      font-family: var(--serif-en);
-      letter-spacing: 0.03em;
+    .access-skip {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: #333;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color 0.3s;
+    }
+    .access-skip:hover { color: #888; }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 6rem 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    .presence-pct {
-      color: var(--amber);
-    }
-
-    /* ─── MENU ─── */
-    .menu-section {
-      margin-bottom: 4rem;
-    }
-
-    .menu-heading {
-      font-family: var(--mono);
+    .hero-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem;
       letter-spacing: 0.2em;
-      color: var(--paper-faint);
-      margin-bottom: 2rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
 
-    .menu-heading::after {
+    .hero-eyebrow::before {
       content: '';
-      flex: 1;
+      display: inline-block;
+      width: 2rem;
       height: 0.5px;
-      background: var(--border);
+      background: var(--ink-faint);
     }
 
-    .menu-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: baseline;
-      padding: 1.1rem 0;
-      border-bottom: 0.5px solid var(--border);
-      gap: 1rem;
+    .hero-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(1.4rem, 4vw, 2.6rem);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
     }
 
-    .menu-item:last-child { border-bottom: none; }
-
-    .menu-item-name {
-      font-size: 0.95rem;
-      letter-spacing: 0.1em;
-      color: var(--paper-dim);
-    }
-
-    .menu-item-desc {
-      font-size: 0.72rem;
-      color: var(--paper-faint);
-      margin-top: 0.2rem;
+    .hero-title-en {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 3rem;
       font-style: italic;
-      font-family: var(--serif-en);
     }
 
-    .menu-item-dots {
-      flex: 1;
-      border-bottom: 1px dotted rgba(240,234,216,0.1);
-      margin: 0 0.5rem 0.2rem;
-      align-self: flex-end;
-      min-width: 2rem;
+    .hero-desc {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      max-width: 520px;
+      line-height: 2;
+      border-left: 0.5px solid var(--border-strong);
+      padding-left: 1.5rem;
+      margin-bottom: 3rem;
     }
 
-    .menu-item-price {
-      font-family: var(--mono);
+    .hero-meta {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--ink-faint);
+      line-height: 2;
+    }
+
+    .hero-meta-item span {
+      display: block;
+      color: var(--ink);
+      font-size: 0.75rem;
+    }
+
+    /* ─── OBSERVER COUNT ─── */
+    .observer-line {
+      font-family: 'Share Tech Mono', monospace;
       font-size: 0.65rem;
-      color: var(--paper-faint);
-      letter-spacing: 0.05em;
-      white-space: nowrap;
+      color: var(--ink-faint);
+      letter-spacing: 0.1em;
+      margin-top: 2rem;
+      height: 1.4em;
     }
 
-    /* ─── NOTICE BOARD ─── */
-    .notice-board {
-      background: var(--bg2);
+    /* ─── SECTIONS ─── */
+    .main-sections {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .article-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
       border: 0.5px solid var(--border);
-      padding: 2rem;
-      margin-bottom: 4rem;
+    }
+
+    .article-item {
+      padding: 1.75rem 2rem;
+      border-right: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: background var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-item:nth-child(2n) { border-right: none; }
+    .article-item:nth-last-child(-n+2) { border-bottom: none; }
+
+    .article-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--ink);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .article-item:hover::before { opacity: 0.03; }
+
+    .article-item-id {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-item-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-item-desc {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+    }
+
+    .article-item-arrow {
+      position: absolute;
+      bottom: 1.25rem;
+      right: 1.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      transition: transform var(--transition), color var(--transition);
+    }
+
+    .article-item:hover .article-item-arrow {
+      transform: translateX(4px);
+      color: var(--ink);
+    }
+
+    /* ─── MEMBERS STRIP ─── */
+    .members-strip {
+      border: 0.5px solid var(--border);
+      border-top: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .member-cell {
+      padding: 1.5rem 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: background var(--transition);
       position: relative;
     }
 
-    .notice-board::before {
-      content: 'お知らせ';
-      font-family: var(--mono);
+    .member-cell:first-child {
+      border-right: 0.5px solid var(--border);
+    }
+
+    .member-cell:hover { background: rgba(0,0,0,0.02); }
+
+    .member-role {
+      font-family: 'Share Tech Mono', monospace;
       font-size: 0.55rem;
-      letter-spacing: 0.18em;
-      color: var(--paper-faint);
-      display: block;
-      margin-bottom: 1.25rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-faint);
+      margin-bottom: 0.5rem;
     }
 
-    .notice-entry {
-      padding: 1rem 0;
+    .member-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25rem;
+    }
+
+    .member-name.aoya { color: var(--aoya); }
+    .member-name.misjo { color: var(--misjo); }
+
+    .member-name-yomi {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── TRANSMISSION LOG ─── */
+    .transmission {
+      margin-top: 4rem;
+      border: 0.5px solid var(--border);
+    }
+
+    .transmission-header {
+      padding: 0.75rem 1.5rem;
       border-bottom: 0.5px solid var(--border);
-    }
-
-    .notice-entry:last-child { border-bottom: none; }
-
-    .notice-date {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      color: var(--paper-faint);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
-    }
-
-    .notice-text {
-      font-size: 0.82rem;
-      color: var(--paper-dim);
-      line-height: 1.9;
-    }
-
-    /* ─── WAFT LINK ─── */
-    .waft-return {
-      text-align: center;
-      padding: 2.5rem 0 1rem;
-    }
-
-    .waft-return a {
-      font-family: var(--mono);
+      font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      color: var(--paper-faint);
-      text-decoration: none;
+      letter-spacing: 0.16em;
+      color: var(--ink-faint);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .transmission-entry {
+      padding: 1.25rem 1.5rem;
       border-bottom: 0.5px solid var(--border);
-      padding-bottom: 2px;
-      transition: color var(--trans), border-color var(--trans);
+      display: grid;
+      grid-template-columns: 7rem 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+      transition: background var(--transition);
     }
 
-    .waft-return a:hover {
-      color: var(--paper-dim);
-      border-color: var(--border-warm);
-    }
+    .transmission-entry:last-child { border-bottom: none; }
+    .transmission-entry:hover { background: rgba(0,0,0,0.02); }
 
-    /* ─── FOOTER ─── */
-    .boreau-footer {
-      text-align: center;
-      padding-top: 2rem;
-      border-top: 0.5px solid var(--border);
-      font-family: var(--mono);
-      font-size: 0.58rem;
+    .trans-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--ink-faint);
       letter-spacing: 0.1em;
-      color: var(--paper-faint);
-      line-height: 2.5;
+      line-height: 1.8;
     }
 
-    /* ─── CANDLE FLICKER ─── */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      47% { opacity: 0.95; }
-      49% { opacity: 0.8; }
-      51% { opacity: 0.95; }
-      70% { opacity: 0.9; }
-      73% { opacity: 1; }
+    .trans-title {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      font-weight: 400;
     }
 
-    .candle { animation: flicker 5s ease-in-out infinite; }
-
-    /* ─── FADE IN ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .trans-tag {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.55rem;
+      border: 0.5px solid var(--border-strong);
+      padding: 1px 6px;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-right: 0.5rem;
     }
 
-    .fade-in {
+    /* ─── BOREAU LINK ─── */
+    .borrow-banner {
+      margin-top: 4rem;
+      border: 0.5px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+
+    .borrow-banner:hover {
+      border-color: var(--border-strong);
+    }
+
+    .borrow-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--ink);
       opacity: 0;
-      animation: fadeUp 1s ease forwards;
+      transition: opacity var(--transition);
     }
 
-    /* ─── CUSTOM CURSOR ─── */
-    #boreau-cursor {
-      position: fixed;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--amber);
-      pointer-events: none;
-      z-index: 99999;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, opacity 0.3s;
-      opacity: 0.4;
-      mix-blend-mode: screen;
+    .borrow-banner:hover::before { opacity: 0.02; }
+
+    .borrow-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--ink-faint);
+      margin-bottom: 0.75rem;
     }
 
-    #boreau-cursor.expanded {
-      width: 24px;
-      height: 24px;
-      opacity: 0.15;
+    .borrow-title {
+      font-family: 'IM Fell English', serif;
+      font-size: 1.8rem;
+      font-style: italic;
+      margin-bottom: 0.75rem;
     }
 
-    @media (max-width: 480px) {
-      .boreau-content { padding: 5rem 1.25rem 6rem; }
-      .menu-item { grid-template-columns: 1fr; }
-      .menu-item-price { display: none; }
+    .borrow-desc {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .borrow-enter {
+      margin-top: 1.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+    }
+
+    @media (max-width: 600px) {
+      .article-grid { grid-template-columns: 1fr; }
+      .article-item:nth-child(2n) { border-right: 0.5px solid var(--border); }
+      .article-item:nth-last-child(-n+2) { border-bottom: 0.5px solid var(--border); }
+      .article-item:last-child { border-bottom: none; }
+      .members-strip { grid-template-columns: 1fr; }
+      .member-cell:first-child { border-right: none; border-bottom: 0.5px solid var(--border); }
+      .transmission-entry { grid-template-columns: 1fr; gap: 0.25rem; }
+      .hero { padding: 5rem 1rem 3rem; }
+      .main-sections { padding: 0 1rem 3rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ─── ARRIVAL OVERLAY ─── -->
-  <div id="arrival">
-    <div class="arrival-title" id="arrival-title">虚構喫茶ボロウ</div>
-    <div class="arrival-sub" id="arrival-sub">Café Boreau — a place that exists only when imagined</div>
-    <button class="arrival-enter" id="arrival-enter">入店する</button>
+  <!-- ─── ACCESS OVERLAY ─── -->
+  <div id="access-overlay">
+    <div class="access-log" id="access-log">
+      <!-- JS で行を追加 -->
+    </div>
+    <div class="access-bar-wrap" id="access-bar-wrap">
+      <div class="access-bar-label">
+        <span>観測者認証シーケンス</span>
+        <span id="access-pct">0%</span>
+      </div>
+      <div class="access-bar-track">
+        <div class="access-bar-fill" id="access-bar-fill"></div>
+      </div>
+    </div>
+    <button class="access-skip" id="access-skip">SKIP ›</button>
   </div>
 
-  <!-- ─── AMBIENT ─── -->
-  <div class="ambient"></div>
+  <!-- ─── NAVIGATION ─── -->
+  <nav id="site-nav">
+    <a href="index.html" class="nav-wordmark">WAFT</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="archive.html">Archive</a></li>
+      <li><a href="log.html">Log</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
-  <!-- ─── CUSTOM CURSOR ─── -->
-  <div id="boreau-cursor"></div>
+  <!-- ─── PAGE CONTENT ─── -->
+  <div class="page-content">
 
-  <!-- ─── MAIN ─── -->
-  <main class="boreau-content" id="main-content" style="opacity:0">
-
-    <header class="boreau-header fade-in" style="animation-delay:0.2s">
-      <div class="boreau-eyebrow">WAFT 指定拠点 / 第10条</div>
-      <h1 class="boreau-name candle">虚構喫茶<br>ボロウ</h1>
-      <div class="boreau-name-en">Café Boreau</div>
-      <div class="boreau-divider"></div>
-      <p class="boreau-tagline">
-        普遍的な喫茶店のイメージ集積により構築されており、<br>
-        あなたが空想することによってのみ<br>
-        その存在が励起される。
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow fade-up">
+        文書番号 WAFT-PUBLIC-001 &nbsp;／&nbsp; 施行：2026.01.22
+      </div>
+      <h1 class="hero-title glitch fade-up" data-text="対境界線広域干渉及び">
+        対境界線広域干渉及び<br>超領域的表現開発機構
+      </h1>
+      <p class="hero-title-en fade-up">
+        Waft — Widefield Aberrant Friction Theoretical Institute
       </p>
-    </header>
-
-    <!-- 存在強度メーター -->
-    <div class="presence-section fade-in" style="animation-delay:0.5s">
-      <div class="presence-label">
-        <span>存在強度</span>
-        <span class="presence-pct" id="presence-pct">測定中...</span>
-      </div>
-      <div class="presence-bar-track">
-        <div class="presence-bar-fill" id="presence-bar"></div>
-      </div>
-      <p class="presence-desc" id="presence-desc">
-        Measuring the intensity of this space through your observation...
+      <p class="hero-desc fade-up">
+        現実と虚構、生と死、自と他のあらゆる「境界線」を、断絶ではなく接触面として定義する。
+        本機構は観測者との間に相互認識を成立させ、
+        その存在継続を支援することを目的とする。
       </p>
-    </div>
-
-    <!-- メニュー -->
-    <section class="menu-section fade-in" style="animation-delay:0.7s">
-      <div class="menu-heading">本日のメニュー</div>
-
-      <div class="menu-item">
-        <div>
-          <div class="menu-item-name">記憶の珈琲</div>
-          <div class="menu-item-desc">存在しないはずの過去を、一杯に定着させたもの</div>
+      <div class="hero-meta fade-up">
+        <div class="hero-meta-item">
+          組織形態<span>概念的枠組み</span>
         </div>
-        <div class="menu-item-price">偽記憶 / 一杯</div>
-      </div>
-
-      <div class="menu-item">
-        <div>
-          <div class="menu-item-name">境界線の紅茶</div>
-          <div class="menu-item-desc">現実と虚構の接触面を、液体として抽出した</div>
+        <div class="hero-meta-item">
+          活動拠点<span>偏在的 / 非固定</span>
         </div>
-        <div class="menu-item-price">揺動 / 一杯</div>
-      </div>
-
-      <div class="menu-item">
-        <div>
-          <div class="menu-item-name">観測者のケーキ</div>
-          <div class="menu-item-desc">あなたが選んだ瞬間に、それは確かに存在した</div>
+        <div class="hero-meta-item">
+          観測者の定義<span>本機構に触れ、認識的変容を起こした知的存在</span>
         </div>
-        <div class="menu-item-price">認識的変容 / 一切れ</div>
       </div>
-
-      <div class="menu-item">
-        <div>
-          <div class="menu-item-name">沈黙のソーダ</div>
-          <div class="menu-item-desc">第11条に関する一切の質疑に添えられる</div>
-        </div>
-        <div class="menu-item-price">不確定 / 一杯</div>
+      <div class="observer-line fade-up" id="observer-line">
+        ——
       </div>
-
-      <div class="menu-item">
-        <div>
-          <div class="menu-item-name">本日のおすすめ</div>
-          <div class="menu-item-desc" id="daily-special">確認中...</div>
-        </div>
-        <div class="menu-item-price" id="daily-price">——</div>
-      </div>
-
     </section>
 
-    <!-- お知らせ -->
-    <div class="notice-board fade-in" style="animation-delay:0.9s">
+    <!-- MAIN SECTIONS -->
+    <div class="main-sections">
+      <div class="sec-label fade-up">干渉領域</div>
 
-      <!-- ▼▼▼ お知らせを追加する場合はこの .notice-entry ブロックをコピーしてください ▼▼▼ -->
-      <div class="notice-entry">
-        <div class="notice-date">2026.01.22</div>
-        <div class="notice-text">
-          本拠点は本日より励起を開始しました。<br>
-          あなたが想起したことにより、この場所はいま存在しています。
-        </div>
+      <div class="article-grid fade-up">
+        <a href="about.html" class="article-item">
+          <div class="article-item-id">SEC.01 / ABOUT</div>
+          <div class="article-item-title">機構について</div>
+          <div class="article-item-desc">存在定義、運営綱領、活動理念。機構が何者であるかを記述する。</div>
+          <div class="article-item-arrow">→</div>
+        </a>
+        <a href="members.html" class="article-item">
+          <div class="article-item-id">SEC.02 / MEMBERS</div>
+          <div class="article-item-title">構成存在</div>
+          <div class="article-item-desc">観測子 青yaヽ跨 及び 三条瞳 の記録と職掌。</div>
+          <div class="article-item-arrow">→</div>
+        </a>
+        <a href="archive.html" class="article-item">
+          <div class="article-item-id">SEC.03 / ARCHIVE</div>
+          <div class="article-item-title">制作物アーカイブ</div>
+          <div class="article-item-desc">本機構が実行した干渉の記録。映像、文章、造形、その他の媒体。</div>
+          <div class="article-item-arrow">→</div>
+        </a>
+        <a href="log.html" class="article-item">
+          <div class="article-item-id">SEC.04 / LOG</div>
+          <div class="article-item-title">活動記録</div>
+          <div class="article-item-desc">定時報告。境界線の観測記録の公開。位相間の通信状態を含む。</div>
+          <div class="article-item-arrow">→</div>
+        </a>
       </div>
 
-      <div class="notice-entry">
-        <div class="notice-date">——</div>
-        <div class="notice-text" style="font-style:italic;color:var(--paper-faint);">
-          次のお知らせは、境界の揺らぎとともに届きます。
-        </div>
+      <!-- MEMBERS STRIP -->
+      <div class="members-strip fade-up">
+        <a href="members.html#aoya" class="member-cell">
+          <div class="member-role">第8条 観測子</div>
+          <div class="member-name aoya">青yaヽ跨</div>
+          <div class="member-name-yomi">アオヤテンカ</div>
+        </a>
+        <a href="members.html#misjo" class="member-cell">
+          <div class="member-role">第9条 物理的個体</div>
+          <div class="member-name misjo">三条瞳</div>
+          <div class="member-name-yomi">ミジョウアキラ</div>
+        </a>
       </div>
-      <!-- ▲▲▲ ここまで ▲▲▲ -->
 
+      <!-- TRANSMISSION LOG -->
+      <div class="transmission fade-up">
+        <div class="transmission-header">
+          <span>最終送出記録 / TRANSMISSION LOG</span>
+          <span id="trans-status">STATUS : STANDBY</span>
+        </div>
+        <!-- 実際の活動記録に差し替えてください -->
+        <a href="log.html" class="transmission-entry">
+          <div class="trans-date">2026.01.22<br>00:00:00</div>
+          <div>
+            <span class="trans-tag">施行</span>
+            <div class="trans-title">本要綱の施行。観測者との接触を開始する。</div>
+          </div>
+        </a>
+        <a href="log.html" class="transmission-entry">
+          <div class="trans-date">——</div>
+          <div>
+            <span class="trans-tag">予定</span>
+            <div class="trans-title">次回送出待機中 <span class="cursor">█</span></div>
+          </div>
+        </a>
+      </div>
+
+      <!-- BOREAU BANNER -->
+      <a href="https://[ボロウのURL]" class="borrow-banner fade-up" target="_blank" rel="noopener">
+        <div class="borrow-label">指定拠点 / SEC.10</div>
+        <div class="borrow-title">虚構喫茶ボロウ</div>
+        <div class="borrow-desc">
+          観測者が空想することによってのみその存在が励起される境界観測基地。
+        </div>
+        <div class="borrow-enter">来店する →</div>
+      </a>
+
+    </div><!-- /.main-sections -->
+  </div><!-- /.page-content -->
+
+  <!-- ─── FOOTER ─── -->
+  <footer id="site-footer">
+    <div class="footer-left">
+      WAFT<br>
+      対境界線広域干渉及び超領域的表現開発機構<br>
+      本要綱は境界の推移に伴い予告なく改訂される
     </div>
-
-    <!-- WAFTへ戻る -->
-    <div class="waft-return fade-in" style="animation-delay:1s">
-      <!-- ▼ WAFTのURLに変更してください ▼ -->
-      <a href="https://[WAFTのURL]" target="_blank" rel="noopener">← WAFTへ戻る / Return to WAFT</a>
+    <div class="footer-right">
+      観測者との接触が発生する一切の時空を<br>暫定的な活動拠点と定義する<br>
+      <span class="text-faint">© WAFT — all observations reserved</span>
     </div>
+  </footer>
 
-    <footer class="boreau-footer fade-in" style="animation-delay:1.1s">
-      虚構喫茶ボロウ<br>
-      WAFT 指定拠点 第10条<br>
-      <span style="opacity:0.5">観測の終了とともに、この場所はあなたの中にのみ残る</span>
-    </footer>
-
-  </main>
-
+  <script src="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+JP:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" crossorigin="anonymous"></script>
+  <script src="js/waft.js"></script>
   <script>
-    // ─── カスタムカーソル ───
-    const cursor = document.getElementById('boreau-cursor');
-    let mx = -100, my = -100, cx = -100, cy = -100;
+    // ─── ACCESS OVERLAY ───
+    const overlay = document.getElementById('access-overlay');
+    const logEl = document.getElementById('access-log');
+    const barFill = document.getElementById('access-bar-fill');
+    const barPct = document.getElementById('access-pct');
+    const barWrap = document.getElementById('access-bar-wrap');
+    const skipBtn = document.getElementById('access-skip');
 
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
-    });
-
-    (function animateCursor() {
-      cx += (mx - cx) * 0.1;
-      cy += (my - cy) * 0.1;
-      cursor.style.left = cx + 'px';
-      cursor.style.top = cy + 'px';
-      requestAnimationFrame(animateCursor);
-    })();
-
-    // ─── ARRIVAL SEQUENCE ───
-    const arrival = document.getElementById('arrival');
-    const arrTitle = document.getElementById('arrival-title');
-    const arrSub = document.getElementById('arrival-sub');
-    const arrEnter = document.getElementById('arrival-enter');
-    const mainContent = document.getElementById('main-content');
-
-    setTimeout(() => arrTitle.classList.add('show'), 600);
-    setTimeout(() => arrSub.classList.add('show'), 1000);
-    setTimeout(() => arrEnter.classList.add('show'), 1200);
-
-    function enter() {
-      arrival.classList.add('out');
-      setTimeout(() => {
-        arrival.style.display = 'none';
-        mainContent.style.transition = 'opacity 1s ease';
-        mainContent.style.opacity = '1';
-        // 入店後に存在強度を測定
-        setTimeout(measurePresence, 800);
-      }, 1200);
-    }
-
-    arrEnter.addEventListener('click', enter);
-
-    // スペースキーでも入店できる
-    document.addEventListener('keydown', e => {
-      if ((e.code === 'Space' || e.code === 'Enter') && !arrival.classList.contains('out')) {
-        enter();
-      }
-    });
-
-    // ─── 存在強度メーター ───
-    function measurePresence() {
-      const bar = document.getElementById('presence-bar');
-      const pct = document.getElementById('presence-pct');
-      const desc = document.getElementById('presence-desc');
-
-      // 訪問時刻・日付をもとにした「不安定な」値
-      const base = 42 + (Date.now() % 1000) / 28;
-      const val = Math.min(95, Math.round(base));
-
-      bar.style.width = val + '%';
-      pct.textContent = val + '%';
-
-      const descs = [
-        'The space grows more defined with each passing moment of your attention.',
-        'Your imagination is the only architecture this place has ever needed.',
-        'Observation confirmed. The café acknowledges your presence.',
-        'Stronger now. The coffee is almost real.',
-      ];
-
-      setTimeout(() => {
-        desc.textContent = descs[Math.floor(Math.random() * descs.length)];
-      }, 1500);
-
-      // 滞在時間で少しずつ上昇
-      setInterval(() => {
-        const current = parseFloat(bar.style.width) || val;
-        const next = Math.min(99, current + 0.3);
-        bar.style.width = next + '%';
-        pct.textContent = Math.round(next) + '%';
-      }, 8000);
-    }
-
-    // ─── 本日のおすすめ（日付で変わる） ───
-    const specials = [
-      { name: '忘れたかった午後', price: '逆因果 / 一杯' },
-      { name: '漂うもの、の味', price: '概念 / 一皿' },
-      { name: 'あなたが来る前から用意されていたもの', price: '先行実在 / 一杯' },
-      { name: '位相間の通信障害', price: 'ノイズ / 一杯' },
-      { name: '境界が溶ける頃の光', price: '揺動 / 一切れ' },
-      { name: '観測者の夢の残滓', price: '偽記憶 / 一杯' },
-      { name: '沈黙の前の一息', price: '不確定 / 一杯' },
+    const LOG_LINES = [
+      { prefix: '00:00:01', text: 'WAFT — 境界観測ターミナル起動中', cls: '' },
+      { prefix: '00:00:02', text: 'ネットワーク位相を確認しています...', cls: 'log-dim' },
+      { prefix: '00:00:03', text: '観測者 ID の生成中...', cls: '' },
+      { prefix: '00:00:04', text: 'ID : ' + generateObserverId(), cls: 'log-blue' },
+      { prefix: '00:00:05', text: '認識的変容の有無を確認しています...', cls: 'log-dim' },
+      { prefix: '00:00:06', text: '位相干渉レベル : <span class="log-red">微弱 / 正常範囲</span>', cls: '' },
+      { prefix: '00:00:07', text: 'あなたは本機構によって観測されています', cls: '' },
+      { prefix: '00:00:08', text: '観測者として登録しました。接続を許可します。', cls: 'log-blue' },
     ];
 
-    const today = new Date();
-    const dayIdx = (today.getDate() + today.getMonth() * 31) % specials.length;
-    const special = specials[dayIdx];
-    document.getElementById('daily-special').textContent = special.name;
-    document.getElementById('daily-price').textContent = special.price;
+    function generateObserverId() {
+      const hex = () => Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+      return 'OBS-' + hex() + '-' + hex();
+    }
 
-    // ─── コンソール ───
-    console.log('%c虚構喫茶ボロウ', 'color: #c8923a; font-family: serif; font-size: 14px;');
-    console.log('%cあなたがここを読んでいる。\nだからこの場所は、今、存在している。', 'color: #8a7f6a; font-family: serif; font-size: 11px;');
+    function dismiss() {
+      overlay.classList.add('out');
+      setTimeout(() => { overlay.style.display = 'none'; }, 800);
+    }
+
+    skipBtn.addEventListener('click', dismiss);
+
+    let lineIdx = 0;
+    let progress = 0;
+
+    function showNextLine() {
+      if (lineIdx >= LOG_LINES.length) {
+        setTimeout(dismiss, 600);
+        return;
+      }
+      const l = LOG_LINES[lineIdx];
+      const row = document.createElement('div');
+      row.className = 'access-log-line';
+      row.innerHTML = `<span class="log-prefix">[${l.prefix}]</span><span class="${l.cls}">${l.text}</span>`;
+      logEl.appendChild(row);
+      logEl.classList.add('visible');
+      requestAnimationFrame(() => row.classList.add('show'));
+
+      lineIdx++;
+      progress = Math.round((lineIdx / LOG_LINES.length) * 100);
+      barFill.style.width = progress + '%';
+      barPct.textContent = progress + '%';
+      barWrap.classList.add('visible');
+
+      const delay = lineIdx < 3 ? 320 : lineIdx < 6 ? 420 : 500;
+      setTimeout(showNextLine, delay);
+    }
+
+    setTimeout(showNextLine, 400);
+
+    // ─── 観測者カウンター（揺らぎを含む） ───
+    const obsLine = document.getElementById('observer-line');
+
+    function unstableCount() {
+      const base = 1 + Math.floor(Date.now() / 86400000) % 997; // 日付ベース
+      const noise = Math.floor(Math.random() * 3) - 1;
+      return base + noise;
+    }
+
+    setTimeout(() => {
+      const n = unstableCount();
+      obsLine.textContent = '> 観測者登録数 : ' + n + '  ※ 数値は境界の揺らぎにより不安定です';
+    }, 3200);
+
+    // ─── TRANSMISSION STATUS ───
+    const statusEl = document.getElementById('trans-status');
+    setInterval(() => {
+      const states = ['STATUS : STANDBY', 'STATUS : MONITORING', 'STATUS : ░░░░░░░░'];
+      statusEl.textContent = states[Math.floor(Math.random() * states.length)];
+    }, 5000);
   </script>
 </body>
 </html>
